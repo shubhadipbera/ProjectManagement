@@ -37,12 +37,13 @@
 		{
 			$data=array();
 			$data['countryInfo']=$this->ClientModel->selectCountry();
-			//print_r($data);die;
 			$data['header']=$this->load->view('include/header.php','',true);
 			$this->load->view('AddClientView.php',$data);
 		}
 		public function addClient()
 		{
+            $data=array();
+            if($this->input->post()){
 			$data = array( 
 					'Client_Name' => $this->input->post('clientName'), 
 					'Client_Email' => $this->input->post('clientEmail'), 
@@ -51,9 +52,14 @@
 					'Client_Added_Date' => date("Y-m-d"),
 					'Client_Addedby' => $this->session->userdata('user_id')
 				); 
-			$tbl='client';
-			$Client_Id=$this->CommonModel->tbl_insert($tbl,$data); 
-			redirect(base_url()."ClientController");
-		}
+                $tbl='client';
+                $Client_Id=$this->CommonModel->tbl_insert($tbl,$data); 
+                $this->session->set_userdata('success_message','Successfully Client Added...');
+                redirect(base_url()."ClientController");
+		      } else{
+                $this->session->set_userdata('error_message','Unsuccessful Client Addition...');
+                redirect(base_url()."ClientController/addClientView");
+            }
+        }
 	}
 ?>

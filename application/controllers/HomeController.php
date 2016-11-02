@@ -12,12 +12,9 @@
 		} 
 		public function index()
 		{
-			if(!empty($this->session->userdata('user_id')))
-			{
+			if(!empty($this->session->userdata('user_id'))){
 				redirect(base_url()."HomeController/dashboard");
-			} 
-			else
-			{
+			} else{
 				$this->load->view('LoginView');
 			}
 		}
@@ -25,19 +22,18 @@
 		{
 			$newdata = array(
                    'username'  =>  $this->input->post('userName'), 
-                   'password'  => $this->input->post('password'),
-         
+                   'password'  => $this->input->post('password')
                );
-			$query=$this->HomeModel->select($newdata);
-			if(!empty($query))
+			$userInfo=$this->HomeModel->select($newdata);
+			if(!empty($userInfo))
 			{
-				$this->session->set_userdata('user_id',$query['User_Id']);
+				$this->session->set_userdata('user_id',$userInfo['User_Id']);
 				redirect(base_url()."HomeController/dashboard");
 			}
 			else
 			{
+                $this->session->set_userdata('error_message','Wrong Credential...');
 				redirect(base_url()."HomeController");
-				echo "NOt a valid username or password";
 			}
 		}
 		public function dashboard()
@@ -52,7 +48,7 @@
 		public function logout()
 		{
 			$this->session->unset_userdata('user_id');	
-			$data['message_display'] = 'Successfully Logout';
+			$this->session->set_userdata('error_message','Successfully Log Out...');
 			redirect(base_url());
 		}
 	}
